@@ -59,6 +59,14 @@ fun HomeScreen(navController: NavHostController) {
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
             ) {
+                Text("View Favorites")
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = { navController.navigate("search") }, // Navigate to search screen
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
+            ) {
                 Text("Search Restaurants")
             }
         }
