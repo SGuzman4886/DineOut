@@ -28,7 +28,7 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 
 @Composable
-fun SearchScreen(navController: NavHostController) {
+fun SearchScreen(navController: NavHostController, favoriteRestaurants: SnapshotStateList<String>) {
     val query = remember { mutableStateOf("") }
     val searchResults = remember { mutableStateListOf<Place>() }
     val context = LocalContext.current
@@ -42,8 +42,7 @@ fun SearchScreen(navController: NavHostController) {
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
-    )
-    {
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -86,10 +85,15 @@ fun SearchScreen(navController: NavHostController) {
 
         LazyColumn(modifier = Modifier.fillMaxSize()) {
             items(searchResults) { place ->
-                RestaurantItem(place) {
-                    moveToLocation(place.latLng, map)
+                RestaurantItem(place, onClick = { moveToLocation(place.latLng, map) }) {
+                    favoriteRestaurants.add(place.name)
                 }
             }
+        }
+
+        // Back Button to Home
+        Button(onClick = { navController.navigate("home") }, modifier = Modifier.padding(top = 16.dp)) {
+            Text("Back to Home")
         }
     }
 }
@@ -107,7 +111,7 @@ private fun updateMapMarkers(googleMap: GoogleMap, searchResults: List<Place>) {
 }
 
 @Composable
-fun RestaurantItem(place: Place, onClick: () -> Unit) {
+fun RestaurantItem(place: Place, onClick: () -> Unit, onAddToFavorites: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,6 +127,10 @@ fun RestaurantItem(place: Place, onClick: () -> Unit) {
             text = place.address,
             style = MaterialTheme.typography.bodyMedium
         )
+        Spacer(modifier = Modifier.height(8.dp))
+        Button(onClick = onAddToFavorites) {
+            Text("Add to Favorites")
+        }
     }
 }
 

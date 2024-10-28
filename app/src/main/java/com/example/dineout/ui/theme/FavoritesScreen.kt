@@ -4,6 +4,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -12,7 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun FavoritesScreen(navController: NavHostController) {
+fun FavoritesScreen(navController: NavHostController, favoriteRestaurants: List<String>) {
     Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Column(
             modifier = Modifier
@@ -21,12 +23,17 @@ fun FavoritesScreen(navController: NavHostController) {
             verticalArrangement = Arrangement.Top
         ) {
             Text(
-                text = "Your Favorite Restaurants",
+                text = "Favorite Restaurants",
                 style = MaterialTheme.typography.headlineMedium,
                 color = MaterialTheme.colorScheme.primary
             )
             Spacer(modifier = Modifier.height(16.dp))
-            val favoriteRestaurants = listOf("Pizza Place", "Burger Joint", "Sushi Spot", "Vegan Bistro")
+
+            Button(onClick = { navController.navigate("home") }) {
+                Text("Back to previous screen")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             for (restaurant in favoriteRestaurants) {
                 FavoriteRestaurantItem(restaurant)
@@ -34,6 +41,7 @@ fun FavoritesScreen(navController: NavHostController) {
         }
     }
 }
+
 
 @Composable
 fun FavoriteRestaurantItem(restaurantName: String) {
@@ -60,5 +68,6 @@ fun FavoriteRestaurantItem(restaurantName: String) {
 @Preview(showBackground = true)
 @Composable
 fun FavoritesScreenPreview() {
-    FavoritesScreen(navController = rememberNavController())
+    val userFavorites = remember { mutableStateListOf<String>() }
+    FavoritesScreen(navController = rememberNavController(),userFavorites)
 }
